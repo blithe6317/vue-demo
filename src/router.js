@@ -3,6 +3,10 @@ import Test from "./pages/test/index.vue";
 
 const routes = [
   {
+    path: "/",
+    redirect: "/home",
+  },
+  {
     path: "/home",
     title: "首页",
     icon: "el-icon-s-home",

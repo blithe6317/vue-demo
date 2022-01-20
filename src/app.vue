@@ -22,7 +22,7 @@ import routes from "./router";
 
 export default {
   data() {
-    return { count: 0, routes };
+    return { count: 0, routes: routes.filter(({ path }) => path !== "/") };
   },
   methods: {
     add() {

@@ -1,3 +1,4 @@
 package-lock.json
 dist
+prod
 node_modules
