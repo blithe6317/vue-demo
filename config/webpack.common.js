@@ -3,14 +3,11 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 module.exports = {
   mode: "development",
-  entry: "./src/index.js",
-  output: {
-    filename: "app.[hash].js",
-    path: path.resolve(__dirname, "dist"),
-  },
+
   module: {
     rules: [
       {
@@ -51,5 +48,10 @@ module.exports = {
     new HtmlWebpackPlugin({ template: "./public/index.html" }),
     new CleanWebpackPlugin(),
     new VueLoaderPlugin(),
+    new BundleAnalyzerPlugin({
+      analyzerMode: "server",
+      generateStatsFile: true,
+      statsOptions: { source: false },
+    }),
   ],
 };

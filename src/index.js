@@ -10,6 +10,14 @@ import routes from "./router";
 
 Vue.use(VueRouter);
 Vue.use(ElementUI);
+let a = 0;
+for (let i = 0; i < 10; i++) {
+  a = i;
+  for (let i = 0; i < 100000000; i++) {
+    a = i;
+  }
+}
+console.log("a:", a);
 
 const router = new VueRouter({
   routes,
