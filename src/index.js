@@ -1,7 +1,18 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import ElementUI from "element-ui";
+import ViewD from "view-design";
+import Vant from "vant";
+import Antd from "ant-design-vue";
+import _ from "lodash";
+
+
+
 import "element-ui/lib/theme-chalk/index.css";
+import "view-design/dist/styles/iview.css";
+import "vant/lib/index.css";
+import "ant-design-vue/dist/antd.css";
+
 import App from "./app.vue";
 
 import "./style.less";

@@ -9,9 +9,19 @@ module.exports = {
   mode: "development",
   entry: "./src/index.js",
   output: {
-    filename: "app.[hash].js",
+    // filename: "app.[name].js",
+    chunkFilename: "[id].js",
     path: path.resolve(__dirname, "dist"),
   },
+  optimization: {
+    splitChunks: {
+      chunks: "async",
+      minChunks: 2,
+      // enforceSizeThreshold: 50000,
+      maxSize: 2000000,
+    },
+  },
+
   module: {
     rules: [
       {
