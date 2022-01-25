@@ -4,22 +4,35 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   mode: "development",
   entry: "./src/index.js",
   output: {
-    // filename: "app.[name].js",
-    chunkFilename: "[id].js",
+    filename: "app.[name].js",
     path: path.resolve(__dirname, "dist"),
   },
+  // optimization: {
+  //   splitChunks: {
+  //     cacheGroups: {
+  //       defaultVendors: {
+  //         test: /[\\/]node_modules[\\/]/,
+  //         name: "vendor",
+  //         chunks: "all",
+  //       },
+  //     },
+  //   },
+  // },
+
   optimization: {
-    splitChunks: {
-      chunks: "async",
-      minChunks: 2,
-      // enforceSizeThreshold: 50000,
-      maxSize: 2000000,
-    },
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        minify: TerserPlugin.uglifyJsMinify,
+        terserOptions: {},
+      }),
+    ],
   },
 
   module: {
