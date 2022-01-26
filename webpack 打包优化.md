@@ -26,7 +26,7 @@ module.exports = {
   // 省略其他配置...
   entry: "./src/index.js",
   output: {
-    filename: "app.[hash].js",
+    filename: "app.[name].js",
     path: path.resolve(__dirname, "dist"),
   },
   // 省略其他配置...
@@ -48,8 +48,7 @@ module.exports = {
   // 省略其他配置...
   entry: "./src/index.js",
   output: {
--    filename: "app.[id].js",
-+    filename: "app.[id].js",
+    filename: "app.[name].js",
     path: path.resolve(__dirname, "dist"),
   },
 +  optimization: {
@@ -75,8 +74,7 @@ module.exports = {
   // 省略其他配置...
   entry: "./src/index.js",
   output: {
--    filename: "app.[hash].js",
-+    filename: "app.[name].js",
+    filename: "app.[name].js",
     path: path.resolve(__dirname, "dist"),
   },
 +  optimization: {
@@ -111,7 +109,7 @@ module.exports = {
   // 省略其他配置...
   entry: "./src/index.js",
   output: {
-    filename: "app.[hash].js",
+    filename: "app.[name].js",
     path: path.resolve(__dirname, "dist"),
   },
 +  optimization: {
