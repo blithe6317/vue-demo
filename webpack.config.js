@@ -8,6 +8,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   mode: "development",
+  // devtool: "source-map",
   entry: "./src/index.js",
   output: {
     filename: "app.[name].js",
@@ -25,15 +26,23 @@ module.exports = {
   //   },
   // },
 
-  optimization: {
-    minimize: true,
-    minimizer: [
-      new TerserPlugin({
-        minify: TerserPlugin.uglifyJsMinify,
-        terserOptions: {},
-      }),
-    ],
-  },
+  // optimization: {
+  //   minimize: true,
+  //   minimizer: [
+  //     new TerserPlugin({
+  //       minify: (file, sourceMap) => {
+  //         const uglifyJsOptions = {
+  //           annotations: true, // 忽略注释
+  //           compress: {
+  //             drop_console: true, // 去掉console
+  //             dead_code: true,
+  //           },
+  //         };
+  //         return require("uglify-js").minify(file, uglifyJsOptions);
+  //       },
+  //     }),
+  //   ],
+  // },
 
   module: {
     rules: [

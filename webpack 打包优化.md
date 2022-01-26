@@ -102,13 +102,159 @@ module.exports = {
 
 #### 文件压缩
 
-webpack 在对文件进行合并的同时会简单的将文件压缩一下，文件体积会略微缩小一点。但是 js 代码中的注释等内容并没有清楚，所以我们还能够再压缩一下。
+webpack 在对文件进行合并的同时会自动的将文件压缩一下，文件体积会大幅缩小。但是 js 代码中的注释等内容并没有清楚，所以我们还能够再压缩一下。
+
+这里需要启用 webpack 的另一个插件 [TerserWebpackPlugin](https://webpack.docschina.org/plugins/terser-webpack-plugin/) 。webpack 5 会自带这个插件对文件进行压缩，但是如果我们想要自定义压缩文件的话，还需要安装这个插件。
+
+```diff
+module.exports = {
+  // 省略其他配置...
+  entry: "./src/index.js",
+  output: {
+    filename: "app.[hash].js",
+    path: path.resolve(__dirname, "dist"),
+  },
++  optimization: {
++    minimize: true,
++    minimizer: [
++      new TerserPlugin({
++        minify: (file, sourceMap) => {
++          const uglifyJsOptions = {
++            annotations: true, // 忽略注释
++            compress: {
++              drop_console: true, // 去掉console
++              dead_code: true,
++            },
++          };
++          return require("uglify-js").minify(file, uglifyJsOptions);
++        },
++      }),
++    ],
++  },
+  // 省略其他配置...
+};
+```
+
+![4.png](./webpack-image/4.png)
+
+这里只是演示一下自定义压缩的使用，如果我们不需要那么强的限制，可以在使用 new TerserPlugin() 不传任何参数即可。
 
 #### 源代码映射功能
 
+webpack 提供了源代码映射的功能 [devtool](https://webpack.docschina.org/configuration/devtool/)，可以帮助我们在调试工具中找到打包前的代码，方便我们调试。但是源代码映射功能也带来了一个问题，就是开启了这个功能后，我们的打包后的文件会多出源代码映射的文件，这个文件的体积很大，会造成我们打包后整体文件比没打包之前还要大。所以对于源代码映射功能，是否开启，如何开启就有了限制。
+
+一般情况下，开发环境和测试环境，建议 devtool = "source-map"，发布环境禁用该功能。
+
+> devtool 还有很多种模式，目前个人认为 source-map 是一种比较好的模式，其他模式大家可以去官网了解。
+
 ### 文件加载
 
+上面是项目在打包过程中的一些优化的地方。在项目运行的浏览器端，我们对文件的加载速度也是有很大的需求的。
+
 #### CDN
+
+我们常用能够提高文件加载速度的方式就是 CDN 了。CDN 能够让客户端找到距离最近的服务器去加载文件。在前端项目中，一般情况下我们都是第三方库采用 CDN 模式，自己项目的代码，则存在自己的服务器上。
+
+```js
+// /src/index.js
+
+import Vue from "vue";
+import VueRouter from "vue-router";
+import ElementUI from "element-ui";
+import Vant from "vant";
+import _ from "lodash";
+
+import "element-ui/lib/theme-chalk/index.css";
+import "vant/lib/index.css";
+import "ant-design-vue/dist/antd.css";
+
+import App from "./app.vue";
+
+import "./style.less";
+
+import routes from "./router";
+
+Vue.use(VueRouter);
+Vue.use(ElementUI);
+
+const router = new VueRouter({
+  routes,
+});
+
+const vm = new Vue({ router, render: (h) => h(App) }).$mount("#app");
+```
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Demo</title>
+  </head>
+  <body>
+    <div id="app"><div class="loading">加载...</div></div>
+  </body>
+</html>
+```
+
+我在测试项目中引用了一些第三方库，现在第三方库全都采用 CDN 模式加载。
+
+```diff
+// ./src/index.js
+
+-  import Vue from "vue";
+-  import VueRouter from "vue-router";
+-  import ElementUI from "element-ui";
+-  import Vant from "vant";
+  import _ from "lodash";
+
+-  import "element-ui/lib/theme-chalk/index.css";
+-  import "vant/lib/index.css";
+-  import "ant-design-vue/dist/antd.css";
+
+  import App from "./app.vue";
+
+  import "./style.less";
+
+  import routes from "./router";
+
+  Vue.use(VueRouter);
+-  Vue.use(ElementUI);
+
+  const router = new VueRouter({
+    routes,
+  });
+
+  const vm = new Vue({ router, render: (h) => h(App) }).$mount("#app");
+```
+
+```diff
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Vue Demo</title>
++      <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
++      <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
++      <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" />
++      <script src="https://unpkg.com/element-ui/lib/index.js"></script>
++      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css" />
++      <script src="https://cdn.jsdelivr.net/npm/vant@2.12/lib/vant.min.js"></script>
+    </head>
+    <body>
+      <div id="app"><div class="loading">加载...</div></div>
+    </body>
+  </html>
+
+```
+
+![5.png](./webpack-image/5.png)
+
+当然我们也可以建立自己的 CDN 服务器，把我们项目打包后的文件放在自己的 CDN 服务器上，这样可能会比这些第三方库提供的 CDN 要更可靠点。
 
 #### defer 与 async
 
