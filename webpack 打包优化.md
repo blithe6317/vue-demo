@@ -256,6 +256,43 @@ const vm = new Vue({ router, render: (h) => h(App) }).$mount("#app");
 
 #### defer 与 async
 
+在 script 元素有两个属性 defer 和 async，这两个属性都不会阻塞 DOM 的渲染。
+
+- 普通：浏览器在解析 html 的过程中，遇到普通的 script 标签时，就会停止 html 的解析，进行下载，如果有多个 script 标签，则会按照顺序执行，即使先下载完成的 script 也需要按照顺序执行
+
+```html
+<script src="app2.js"></script>
+<script src="app1.js"></script>
+```
+
+![6.png](./webpack-image/6.png)
+
+- defer：浏览器会异步加载该文件并且不会影响到后续 DOM 的渲染，如果有多个设置了 defer 的 script 的标签，则会按照顺序执行所有的 script，defer 脚本会在文档渲染完毕后，DOMContentLoaded 事件调用前执行
+
+```html
+<script defer src="app2.js"></script>
+<script defer src="app1.js"></script>
+```
+
+![7.png](./webpack-image/7.png)
+
+- async：浏览器会异步加载该文件，并在加载完成后，在允许的情况下执行该文件，如果有多个 async 的 script 标签，就会谁先加载完成谁先执行
+
+```html
+<script async src="app2.js"></script>
+<script async src="app1.js"></script>
+```
+
+![8.png](./webpack-image/8.png)
+
+> 当 html 文档完全加载和解析完之后，DOMContentLoaded 时间被触发，不需要等待样式、图片等完全加载
+
+具体使用哪种模式就需要我们自己判断：
+
+如果对 DOM 元素是否加载解析完成不在乎而且也和其他脚本文件没有依赖，可以使用 async；否则使用 defer。如果不清楚的话就使用 defer。
+
+如果是使用 webpack 中的 HtmlWebpackPlugin 插件的话，会自动使用 defer 属性。
+
 #### 动态加载
 
 #### 缓存
