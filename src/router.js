@@ -1,5 +1,8 @@
-import Home from "./pages/home/index.vue";
-import Test from "./pages/test/index.vue";
+// import Home from "./pages/home/index.vue";
+// import Test from "./pages/test/index.vue";
+
+const Home = () => import("./pages/home/index.vue");
+const Test = () => import("./pages/test/index.vue");
 
 const routes = [
   {

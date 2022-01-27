@@ -291,9 +291,63 @@ const vm = new Vue({ router, render: (h) => h(App) }).$mount("#app");
 
 如果对 DOM 元素是否加载解析完成不在乎而且也和其他脚本文件没有依赖，可以使用 async；否则使用 defer。如果不清楚的话就使用 defer。
 
-如果是使用 webpack 中的 HtmlWebpackPlugin 插件的话，会自动使用 defer 属性。
+如果是使用 webpack 中的 [HtmlWebpackPlugin](https://webpack.docschina.org/plugins/html-webpack-plugin/) 插件的话，会自动使用 defer 属性。当然是否自动使用 defer 属性也跟插件版本有关，如果没有自动使用 defer 就需要我们自己配置。
+
+```js
+module.exports = {
+  // 省略其他配置...
+  plugins: [new HtmlWebpackPlugin({ scriptLoading: "defer" })],
+  // 省略其他配置...
+};
+```
 
 #### 动态加载
+
+动态加载也叫懒加载，其作用是只在需要的时候加载所需内容。比如在下面的项目中，打开的是首页模块，那么测试模块的内容我就不需要加载。
+
+![9.png](./webpack-image/9.png)
+
+我们可以修改我们的路由系统：
+
+```diff
+// .src/router.js
+
+- import Home from "./pages/home/index.vue";
+- import Test from "./pages/test/index.vue";
++ const Home = () => import("./pages/home/index.vue");
++ const Test = () => import("./pages/test/index.vue");
+
+const routes = [
+  {
+    path: "/",
+    redirect: "/home",
+  },
+  {
+    path: "/home",
+    title: "首页",
+    icon: "el-icon-s-home",
+    component: Home,
+  },
+  {
+    path: "/test",
+    title: "测试",
+    icon: "el-icon-s-tools",
+    component: Test,
+  },
+];
+
+export default routes;
+```
+
+然后重新打包：
+
+![10.png](./webpack-image/10.png)
+
+我们可以看到 home、test 模块被单独分出来了，并且 node_modules 下的文件也被单独的拆出。在浏览器上打开打包后的 index.html 文件，我们可以看到在 home 模块上，只加载了 home 模块的 js，当我们点击测试模块的时候，测试模块的 js 才会被加载。
+
+![11.png](./webpack-image/11.png)
+
+![12.png](./webpack-image/12.png)
 
 #### 缓存
 
