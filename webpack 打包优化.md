@@ -351,6 +351,8 @@ export default routes;
 
 #### 缓存
 
+https://www.cnblogs.com/sreops/p/11073277.html
+
 ### 首屏加载
 
 ### 其他网络请求

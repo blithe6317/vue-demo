@@ -81,6 +81,7 @@ module.exports = {
   },
   devServer: {
     port: 8081,
+    compress: true,
   },
   plugins: [
     new HtmlWebpackPlugin({ template: "./public/index.html" }),
