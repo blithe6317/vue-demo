@@ -349,9 +349,27 @@ export default routes;
 
 ![12.png](./webpack-image/12.png)
 
+如果我们觉得打包后的文件名不够理想，我们也可以利用 SplitChunks
+
 #### 缓存
 
 https://www.cnblogs.com/sreops/p/11073277.html
+
+    server {
+        listen       3000;
+        server_name  localhost;
+
+        location / {
+            root   E:\workspace\vue-demo\dist;
+            index  index.html index.htm;
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+
+    }
 
 ### 首屏加载
 

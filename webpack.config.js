@@ -11,20 +11,21 @@ module.exports = {
   // devtool: "source-map",
   entry: "./src/index.js",
   output: {
-    filename: "app.[name].js",
+    filename: "app.[contenthash].js",
+    chunkFilename: "app.[contenthash].js",
     path: path.resolve(__dirname, "dist"),
   },
-  // optimization: {
-  //   splitChunks: {
-  //     cacheGroups: {
-  //       defaultVendors: {
-  //         test: /[\\/]node_modules[\\/]/,
-  //         name: "vendor",
-  //         chunks: "all",
-  //       },
-  //     },
-  //   },
-  // },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendor",
+          chunks: "all",
+        },
+      },
+    },
+  },
 
   // optimization: {
   //   minimize: true,
